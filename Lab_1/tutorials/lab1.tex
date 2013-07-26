@@ -186,39 +186,48 @@
 	\end{itemize}
 \end{frame}
 
+\section{TCP}
+\begin{frame}
+	\frametitle{Connection based communication}
+	{\small Server performs these actions:}
+	\begin{itemize}
+		\item \textcolor{blue}{\texttt{socket}}: create the socket
+		\item \textcolor{blue}{\texttt{bind}}: give the address of the socket on the server
+		\item \textcolor{blue}{\texttt{listen}}: specifies the maximum number of connection requests that can be pending for this process
+		\item \textcolor{blue}{\texttt{accept}}: establish the connection with a specific client
+		\item \textcolor{blue}{\texttt{send, recv}}: stream-based equivalents of read and write
+		\item \textcolor{blue}{\texttt{shutdown}}: end reading or writing
+		\item \textcolor{blue}{\texttt{listen}}: release kernel data structures
+	\end{itemize}
+\end{frame}
 
-\section{Problem description}
+\begin{frame}
+	\frametitle{TCP-based sockets}
+	\begin{center}
+		\includegraphics[scale=.65]{images/Socket-Workflow.png} 
+	\end{center}
+\end{frame}
+
 \begin{frame}[fragile]
-	\frametitle{Problem Description}
-	\framesubtitle{Compile the program}
-	\tiny
-	\begin{lstlisting}[language=make, breaklines=true, commentstyle=\color{mygreen}, frame=shadowbox, rulecolor=\color{black}, numbers=left,  numbersep=2pt, numberstyle=\tiny\color{mygray}]
-	# Make file
-	CC=gcc
-	CFLAG= -c -Wall
-
-	EXECS := circle
-	PROG  := circle.c
-	OBJS  := $(addprefix OBJECTS/, $(addsuffix .o, $(EXECS)))
-
-	all     :$(EXECS)
-
-	OBJECTS :
-    		mkdir -p $@
-
-	$(OBJS) :| OBJECTS
-
-	$(EXECS):$(OBJS)
-            $(CC) $^ -o $@
-
-	OBJECTS/circle.o :$(PROG)
-                $(CC) $(CFLAG) $^ -o $@
-
-	clean   :
-    		rm -rf $(EXECS) OBJECTS
-
-	.PHONY  : clean all
-	\end{lstlisting}			
+	\frametitle{socket API}
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	int socket(int domain, int type, int protocol);
+	\end{lstlisting}}
+	{\footnotesize
+	Returns a file descriptor (called socket ID) if successful, -1 otherwise. Note that the socket returns a socket descriptor which is the same as a file descriptor. \\
+	The \textcolor{blue}{domain} is \textcolor{blue}{\texttt{AF\_INET}}. \\
+	The \textcolor{blue}{type} argument can be: \\
+	\begin{itemize}
+		\item \textcolor{blue}{\texttt{SOCK\_STREAM}}: Establishes a virtual circuit for stream
+		\item \textcolor{blue}{\texttt{SOCK\_DGRAM}}: Establishes a datagram for communication 
+		\item \textcolor{blue}{\texttt{SOCK\_SEQPACKET}}:  Establishes a reliable, connection based,
+two way communication with maximum message size. (This is not available on most machines.)
+	\end{itemize}
+	\textcolor{blue}{protocol} is usually \textcolor{red}{zero}, so that \textcolor{blue}{type} defines the connection 	within domain.
+	}
 \end{frame}
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
