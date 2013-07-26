@@ -158,16 +158,31 @@
 
 \begin{frame}
 	\frametitle{Socket Characteristics (cont'd)}
-	{\small Socket are characterized by their domain, type and transport protocol. Common domains are:}
+	{\small Each socket type has one or more protocols. Ex:}
 	\begin{itemize}
-		\item \textcolor{blue}{\texttt{AF\_UNIX}}: address format is UNIX pathname
-		\item \textcolor{blue}{\texttt{AF\_INET}}: address format is host and port number
+		\item TCP/IP (virtual circuits)
+		\item UDP (datagram)
 	\end{itemize}
 	\vskip4mm
-	{\small Common types are:}
+	{\small Use of sockets:}
 	\begin{itemize}
-		\item \textcolor{blue}{Virtual Circuits}: received in order transmitted and reliably
-		\item \textcolor{blue}{datagram}: arbitrary order, unreliable
+		\item Connection–based sockets communicate client-server: the server waits for a connection from the client.
+		\item Connectionless sockets are peer-to-peer: each process is symmetric.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Socket APIs}
+	\begin{itemize}
+		\item \textcolor{blue}{\texttt{socket}}: creates a socket of a given domain, type, protocol
+(buy a phone)
+		\item \textcolor{blue}{\texttt{listen}}: assigns a name to the socket (get a telephone number)
+		\item \textcolor{blue}{\texttt{accept}}: specifies the number of pending connections that can be queued for a server socket. (call waiting allowance)
+		\item \textcolor{blue}{\texttt{connect}}: client requests a connection request to a server
+(call)	
+		\item \textcolor{blue}{\texttt{send, sendto}}: write to connection (speak)
+		\item \textcolor{blue}{\texttt{recv, recvfrom}}: read from connection (listen)		
+		\item \textcolor{blue}{\texttt{shutdown}}: end the call	
 	\end{itemize}
 \end{frame}
 
