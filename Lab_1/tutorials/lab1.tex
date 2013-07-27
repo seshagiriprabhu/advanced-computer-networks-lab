@@ -382,7 +382,7 @@ not benefit from multiprocessors.
 		\item protocol
 		\item destination IP
 		\item destination port
-	\end{itemize}
+	\end{itemize}sockaddr in serverAddr ;
 	So that multiple connections can share the same IP and port.
 	}
 \end{frame}
@@ -398,6 +398,80 @@ target communications. This means that some ports must be reserved for these “
 	\end{itemize}
 	}
 \end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example: TCP/IP Server Code}	
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+sockaddr in serverAddr ;
+sockaddr &serverAddrCast = (sockaddr &)serverAddr;
+
+//get a tcp/ip socket
+int listenFd = socket (AF_INET , SOCK_STREAM , 0);
+
+bzero (&serverAddr , sizeof (serverAddr));
+serverAddr.sinfamily = AF_INET;
+
+//any internet interface on this server 
+serverAddr.sinaddr.saddr = htonl (INADDR_ANY);
+serverAddr.sin_port = htons(13);
+
+bind(listenFd, &serverAddrCast, sizeof(serverAddr));
+
+listen(listenFd, 5);
+
+for ( ; ; ) {
+    int connectFd =
+        accept (listenFd, ( sockaddr * ) NULL, NULL);
+        // .... read and write operations on connectFd
+    shutdown(connectFd, 2);
+    close(connectFd);
+}
+	\end{lstlisting}}
+	{\footnotesize
+	Note that the above is an \textcolor{red}{iterative server}, which means that it serves one connection at a time.
+	}
+\end{frame}	
+
+\begin{frame}
+	\frametitle{Concurrent Server}
+	{\footnotesize To build a concurrent server::
+	\begin{itemize}
+		\item a fork is performed after the accept.
+		\item The child process closes listenFd, and communicates using connectFd. 
+		\item The parent process closses connectFd, and then loops back to the accept to wait for another connection request
+	\end{itemize}
+	}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example: TCP/IP Server Code}	
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+sockaddr in serverAddr ;
+sockaddr &serverAddrCast = (sockaddr &)serverAddr;
+
+// get a tcp/ip socket
+int sockFd = socket (AF_INET , SOCK_STREAM , 0);
+
+bzero (&serverAddr , sizeof (serverAddr));
+serverAddr.sinfamily = AF_INET;
+
+// host IP # in dotted decimal format
+inet_pton(AF_INET, serverName, serverAddr.sin_addr);
+serverAddr.sin_port = htons(13);
+
+connect(sockFd, serverAddrCast, sizeof(serverAddr));
+      // ... read and write operations on sockFd ..
+     
+shutdown(socktFd, 2);
+close(sockFd);
+}
+	\end{lstlisting}}
+	{\footnotesize
+	Note that the above is an \textcolor{red}{concurrent server}, which means that it can serves more than one connection at a time.
+	}
+\end{frame}	
 
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
