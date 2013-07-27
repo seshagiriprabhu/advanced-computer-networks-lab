@@ -473,6 +473,44 @@ close(sockFd);
 	}
 \end{frame}	
 
+\section{UDP}
+\begin{frame}
+	\frametitle{Connectionless communication}
+	{\footnotesize Communication is symmetric (peer-to-peer)
+	\begin{itemize}
+		\item \texttt{\textcolor{blue}{socket}}
+		\item \texttt{\textcolor{blue}{bind}}: bind is optional for initiator
+		\item \texttt{\textcolor{blue}{sendto, recvfrom}} (repeated)
+		\item \texttt{\textcolor{blue}{shutdown}}
+		\item \texttt{\textcolor{blue}{close}}								
+	\end{itemize}
+	}
+\end{frame}
+
+\begin{frame}
+	\setbeamercolor{background canvas}{bg=red}
+	\frametitle{Connectionless communication}
+	\begin{center}
+		\includegraphics[scale=.70]{images/connectionless.png} 
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{UDP variations}
+	\frametitle{Connectionless communication}
+	{\footnotesize Communication is symmetric (peer-to-peer) \\It is not necessary for both sockets to \textcolor{blue}{bind}
+	\begin{itemize}
+		\item The receiver gets the address of the sender
+	\end{itemize}
+	It is possible for a UDP socket to \textcolor{blue}{connect}
+	\begin{itemize}
+		\item In this case, \textcolor{blue}{send/recv} (or write/read) must be used instead
+of \textcolor{blue}{sendto/recvfrom}.
+		\item Asynchronous errors can be returned (using ICMP)
+	\end{itemize}
+	}
+\end{frame}
+
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
 	\framesubtitle{Compile and run the program}
@@ -548,7 +586,7 @@ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 
 \end{frame}
 
-\section{Problem Dissection}
+
 \begin{frame}[fragile]
 	\frametitle {Problem Dissection}
 	\framesubtitle {Macro... Macro..}
