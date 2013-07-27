@@ -387,6 +387,18 @@ not benefit from multiprocessors.
 	}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Port usage}
+	{\footnotesize Note that the initiator of communications needs a fixed port to
+target communications. This means that some ports must be reserved for these “well known” ports. \\Port usage:
+	\begin{itemize}
+		\item 0-1023: These ports can only be binded to by root
+		\item 1024-5000: well known ports
+		\item 5001-64K-1: ephemeral ports
+	\end{itemize}
+	}
+\end{frame}
+
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
 	\framesubtitle{Compile and run the program}
