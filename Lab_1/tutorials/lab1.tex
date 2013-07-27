@@ -512,34 +512,39 @@ of \textcolor{blue}{sendto/recvfrom}.
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Problem Description}
-	\framesubtitle{Compile and run the program}
-	\tiny
-	\begin{block}{Compile the program}
-		\begin{lstlisting}[language=bash]
-seshagiri@ACCS:~$ make
-mkdir -p OBJECTS
-gcc -c -Wall circle.c -o OBJECTS/circle.o
-gcc OBJECTS/circle.o -o circle
-    	\end{lstlisting}
-    \end{block}
-    
-	\begin{block}{Execute the binary file - $circle$}
-		\begin{lstlisting}[language=bash]
-seshagiri@ACCS:~$ ./circle
-0.250
-		\end{lstlisting}
-	\end{block}
-\end{frame}
+	\frametitle{sendto}
+	{\footnotesize for connectionless protocols}
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	#include <sys/types.h>
+	#include <sys/socket.h>
 
-\begin{frame}
-	\frametitle{Problem Description}
-	\framesubtitle{What can we understand after executing the binary file?}
-	\begin{center}
-		\small What can we understand after executing the binary file?
-		\small{$<burp>$} \huge {NOTHING!} \small {$</burp>$}
-	\end{center}
-\end{frame}
+	ssize_t sendto(int sockfd, const void *buf, 
+	               size_t len, int flags,
+               const struct sockaddr *dest_addr, socklen_t addrlen);
+	\end{lstlisting}}
+	{\footnotesize
+	Send a buffer, \texttt{\textcolor{blue}{buf}}, of length \texttt{\textcolor{blue}{len}} to address specified by \texttt{\textcolor{blue}{dest\_addr}} of size \texttt{\textcolor{blue}{addrlen}}. Returns number of bytes sent or -1 on error.
+	}
+\end{frame}	
+
+\begin{frame}[fragile]
+	\frametitle{recvfrom}
+	{\footnotesize for connectionless protocols}
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	
+	ssize_t recvfrom(int sockfd, void *buf, 
+	                 size_t len, int flags,
+                 struct sockaddr *src_addr, socklen_t *addrlen);
+	\end{lstlisting}}
+	{\footnotesize
+Receive a buffer in \texttt{\textcolor{blue}{buf}} of maximum length \texttt{\textcolor{blue}{len}} from an unspecified sender. \\Sender address returned in \texttt{\textcolor{blue}{src\_addr}}, of size \texttt{\textcolor{blue}{*addrlength}}. Returns number of bytes receive or -1 on error.
+	}
+\end{frame}	
+
 
 \begin{frame}
 	\frametitle{Problem Description}
