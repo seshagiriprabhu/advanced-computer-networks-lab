@@ -20,7 +20,7 @@ This repository contains files related to CS620 Advanced Computer Networks lab.
 ### How to compile tex files ###
 
 In each and every tutorial directories, you can find **tex** files, it can be compiled by `make` command.
-After compiling you will find the corresponding pdf file in the same directory.
+After compiling you will find the corresponding **pdf** file in the same directory.
 
 ## Contents of this repo ##
 
