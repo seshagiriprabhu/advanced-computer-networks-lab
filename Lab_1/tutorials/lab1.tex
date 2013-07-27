@@ -271,7 +271,8 @@ two way communication with maximum message size. (This is not available on most 
 	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
 	#include <sys/types.h>
 	#include <sys/socket.h>
-	int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+	int accept(int sockfd, struct sockaddr *addr, 
+	           socklen_t *addrlen);
 	\end{lstlisting}}
 	{\footnotesize
 	Returns the socketId and address of client connecting to socket. if \texttt{\textcolor{blue}{addrlen}} or \texttt{\textcolor{blue}{addr}} equal zero, no address structure is returned. \texttt{\textcolor{blue}{addrlen}} is the maximum size of address structure that can be called, returns the actual value. \\Waits for an incoming request, and when received creates a socket for it.
@@ -307,6 +308,25 @@ not benefit from multiprocessors.
 	\end{itemize}
 	}
 \end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{send}
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	ssize_t send(int sockfd, const void *buf, 
+	             size_t len, int flags);
+	\end{lstlisting}}
+	{\footnotesize
+Send a message. Returns the number of bytes sent or -1 if failure. (Must be a bound socket). \\ flag is either
+	\begin{itemize}
+	\item 0: default
+	\item \texttt{\textcolor{blue}{MSG\_OOB}}: Out-of-band high priority communication	
+	\end{itemize}
+	}
+\end{frame}
+
 
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
