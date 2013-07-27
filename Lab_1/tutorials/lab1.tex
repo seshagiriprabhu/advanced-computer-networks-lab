@@ -12,8 +12,7 @@
 \usepackage{thumbpdf}
 \usepackage{wasysym}
 \usepackage{ucs}
-\usepackage[utf8]{inputenc}
-\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage[utf8]{inputenc}\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{courier}
@@ -316,10 +315,10 @@ not benefit from multiprocessors.
 	#include <sys/types.h>
 	#include <sys/socket.h>
 	ssize_t send(int sockfd, const void *buf, 
-	             size_t len, int flags);
+	             size_t len, int flag);
 	\end{lstlisting}}
 	{\footnotesize
-Send a message. Returns the number of bytes sent or -1 if failure. (Must be a bound socket). \\ flag is either
+	Send a message. Returns the number of bytes sent or -1 if failure. (Must be a bound socket). \\ flag is either
 	\begin{itemize}
 	\item 0: default
 	\item \texttt{\textcolor{blue}{MSG\_OOB}}: Out-of-band high priority communication	
@@ -327,6 +326,25 @@ Send a message. Returns the number of bytes sent or -1 if failure. (Must be a bo
 	}
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{recv}
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	ssize_t recv(int sockfd, void *buf, 
+	             size_t len, int flags);
+	\end{lstlisting}}
+	{\footnotesize
+	Receive up to \texttt{\textcolor{blue}{len}} bytes in \texttt{\textcolor{blue}{bufferPtr}}. Returns the number of bytes received or -1 on failure. \\ flags can be either
+
+	\begin{itemize}
+	\item 0: default
+	\item \texttt{\textcolor{blue}{MSG\_OOB}}:  out-of-bound message
+	\item \texttt{\textcolor{blue}{MSG PEEK}}: look at message without removing
+	\end{itemize}
+	}
+\end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Problem Description}
