@@ -49,6 +49,8 @@
 \def\SB#1{\textsubscript{\textcolor{blue}{#1}}}
 \setbeamertemplate{itemize items}[default]
 \setbeamertemplate{enumerate items}[default]
+\setbeamercolor{bibliography item}{parent=palette primary}
+\setbeamercolor*{bibliography entry title}{parent=palette primary}
 \usepackage{listings}
 \usepackage{color}
 
@@ -549,6 +551,8 @@ Receive a buffer in \texttt{\textcolor{blue}{buf}} of maximum length \texttt{\te
 	\frametitle{Example: UDP--Server Code}	
 	{\tiny
 	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+int socketld = socket(AF_INET, SOCK_DGRAM, 0) ;
+
 sockaddr in serverAddr, clientAddr;
 sockaddr &serverAddrCast = (sockaddr &)serverAddr;
 sockaddr &clientAddrCast = (sockaddr &)clientAddr;
@@ -576,174 +580,36 @@ sendto (socketld, buffer, bufferSize,
 close(socketld);
 	\end{lstlisting}}
 \end{frame}	
-
-\begin{frame}
-	\frametitle{Problem Description}
-	\framesubtitle{What should we do next?}
-	\begin{center}
-		\small {What should we do next?} \\
-		\large Inspect the source code
-	\end{center}
-\end{frame}
-
 \begin{frame}[fragile]
-	\frametitle{Problem Description}
-	\framesubtitle{Intended the code properly for better understanding}
-	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen}, rulecolor=\color{black}, numbers=left,  numbersep=2pt, numberstyle=\tiny\color{mygray}] ]
-#include <stdio.h>
-#define _ -F<00||--F-OO--;
+	\frametitle{Example: UDP--client}	
+	{\tiny
+	\begin{lstlisting}[language=C, breaklines=true, commentstyle=\color{mygreen},frame=lrtb,  rulecolor=\color{black}, numbers=left,  numbersep=5pt, numberstyle=\tiny\color{mygray}]
+	int socketld = socket(AF_INET, SOCK_DGRAM, 0) ;
 
-int F=00,OO=00;
+sockaddr in serverAddr, clientAddr;
+sockaddr &serverAddrCast = (sockaddr &)serverAddr;
+sockaddr &clientAddrCast = (sockaddr &)clientAddr;
 
-main() {
-        F_OO();
-        printf("%1.3f\n", 4.*-F/OO/OO);
-}
+// specify server address, port
+serverAddr.sin_family = AF_INET;
+serverAddr.sin_port = htons(serverPort);
+struct hostent *hp = gethostbyname(hostName);
+memcpy((char*) &serverAddr.sinaddr,
+       (char*)hp->haddr, hp->hlength);
+  
+// no need to bind if not peer-to -peer
+int size = sizeof(serverAddr);	
+sendto (socketld, buffer, bufferSize,
+        0, serverAddrCast, size);
 
-F_OO() {
-            _-_-_-_
-       _-_-_-_-_-_-_-_-_
-    _-_-_-_-_-_-_-_-_-_-_-_
-  _-_-_-_-_-_-_-_-_-_-_-_-_-_
- _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
- _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
- _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
- _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-  _-_-_-_-_-_-_-_-_-_-_-_-_-_
-    _-_-_-_-_-_-_-_-_-_-_-_
-        _-_-_-_-_-_-_-_
-            _-_-_-_
-}
+recvfrom(socketld, buffer, bufferSize,
+         0, serverAddrCast, &size);
+         	
+close(socketld);
 	\end{lstlisting}
-
+	}
 \end{frame}
 
-
-\begin{frame}[fragile]
-	\frametitle {Problem Dissection}
-	\framesubtitle {Macro... Macro..}
-	\begin{block}{Unnoticed macro $\_$ }
-		\begin{lstlisting}[language=C]
-			#define _ -F<00||--F-OO--;
-		\end{lstlisting}	
-	\end{block}
-	\begin{block}{What macro does?}
-		\begin{itemize}
-			\item Replaces '\texttt{\_}' with {\tiny '\texttt{-F<00||-{}-F-OO-{}-;}'}
-			\item for eg: {\tiny '\texttt{\_-\_-\_}'} becomes {\tiny '\texttt{-F<00||-{}-F-OO-{}-;- -F<00||-{}-F-OO-{}-;- -F<00||-{}-F-OO-{}-;}'}
-			\item One of the important property of \texttt{||} operator is that if the first condition is \textcolor{red}{true}, it will \textcolor{red}{NOT} check for the second condition unlike \texttt{\&\&} operator.
-		\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Problem Dissection}
-	\framesubtitle{Values of variables inside \texttt{F\_OO()}}
-	\begin{block}{Values of \texttt{F} and \texttt{OO}}
-		\begin{itemize}
-			\item \texttt{F} and \texttt{OO} are initially set as $zero$. 
-			\item In the first line of \texttt{F\_OO} function, \texttt{-F<00} becomes \textcolor{red}{false} hence checks for the second condition.
-			\item \texttt{-{}-F} becomes -1 and \texttt{OO-{}-} remains as 0.
-			\item After the execution of the first line, value of F becomes -1 and OO becomes -1.
-		\end{itemize}				
-	\end{block}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Problem Dissection}
-	\framesubtitle{Values of \texttt{F} and \texttt{OO} inside \texttt{F\_OO()}}
-	\begin{itemize}
-	\item  {\tiny \textbf{Line 1:} texttt{-0<0 (\textcolor{red}{false}) || (-1)-(0--) (\textcolor{green}{executed}); -1<0 (\textcolor{green}{true}) || (-2)-(-1)(\textcolor{red}{not executed}); -1 < 0 (\textcolor{green}{true}) || (-3)-(-2)(\textcolor{red}{not executed})}}. {\tiny \texttt{F = -1, OO = -1}}
-	\item {\tiny \textbf{Line 2:} \texttt{1<0 (\textcolor{red}{false}) || (-2)-(1--) (\textcolor{green}{executed}); -2<0 (\textcolor{green}{true}) || (-3)-(-2)(\textcolor{red}{not executed}); -3 < 0 (\textcolor{green}{true}) || (-4)-(-3)(\textcolor{red}{not executed}) -4<0 (\textcolor{green}{true}) || (-5)-(-4)(\textcolor{red}{not executed}); -5 < 0 (\textcolor{green}{true}) || (-6)-(-5)(\textcolor{red}{not executed})}}. {\tiny \texttt{F = -2, OO = -2}}
-	\\.
-	\\.
-	\\.
-	\item {\tiny \textbf{Line 16:} \texttt{F = -16, OO = -16} }
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Problem Dissection}
-	\framesubtitle{Lets go back to \texttt{main()} where \texttt{F\_OO()} was called}
-	\begin{block}{Inside \texttt{main()}}
-		\begin{lstlisting}[language=C]
-			printf("%1.3f\n",4.*-F/OO/OO);
-		\end{lstlisting}
-		This line calculates the value 0.250 
-	\end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Problem Dissection}
-	\framesubtitle{What was the learning from this program?}
-	\begin{center}
-		\small {What was the learning by inspecting the code} \\
-		\huge {NIL}
-	\end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Problem Dissection}
-	\framesubtitle{What should be done next?}
-	\begin{center}
-		\small {What should be done next?} \\
-		\small {Lets} \\
-	\end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Problem Dissection}
-	\framesubtitle{What should be done next?}
-	\begin{center}
-		\small {Bingo! Wiki rocks} \\
-		{\tiny \url{http://en.wikipedia.org/wiki/International_Obfuscated_C_Code_Contest\#Examples}}
-		{\tiny The same example is mentioned in the above mentioned link and it says that the program works by calculating its own area and diameter, and then doing a division to approximate pi!!} \\
-		{\small They call it as an Obfuscated C code}
-	\end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Problem Dissection}
-	\framesubtitle{How does it calculates the value of $\Pi$?}
-	\begin{block}{Lets do reverse engineering!}
-		Using the hint in Wiki, we found that program works by calculating its own area and diameter. So we need to make the $\Pi$, Area, radius/diameter looks like \texttt{4.*-F/OO/OO}. \\ So lets do reverse Engineering!
-	\end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Problem Dissection}
-	\framesubtitle{Calculating the value of $\Pi$ }
-	\begin{block}{Calculating the value of $\Pi$ from Area and radius/diameter}
-		Area = $\Pi$ * $radius^{2}$ \\
-		$\Pi$ = Area / $radius^{2}$ \\
-		As we need 4 in the numerator we may have to substitute radius with diameter.\\
-		$\Pi$ = Area / $(diameter/2)^{2}$ \\
-		$\Pi$ = 4 * Area / (diameter * diameter) \\
-		$\Pi$ = 4 * Area / diameter / diameter \\
-	\end{block}
-\end{frame}	
-
-\section{Inference}
-\begin{frame}
-	\frametitle{Inference}
-	\framesubtitle{What can we conclude from this?}
-	\begin{block}{Conclusion}
-		Variable \textcolor{red}{F} is the area of the circle used in the program \\
-		The Diameter of the circle is the variable \textcolor{red}{OO}
-	\end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Learning}
-	\framesubtitle{What's new I have learned from this?}
-	\begin{block}{Learning something new}
-		Previously, I have tried to de-obfuscating PHP code (in which they used base64 encoding, rot 13 transformation etc) files during Capture The Flag contests. This is the first time I am hearing about C code obfuscation. That was a nice learning experience!
-	\end{block}
-\end{frame}
 
 \frame{
   	\vspace{2cm}
@@ -753,8 +619,18 @@ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
   	\vspace{1cm}
   	\begin{flushright}
         Seshagiri Prabhu \\
-    	\structure{\footnotesize{seshagiriprabhu@gmail.com} \\ AM.EN.P2CSN12028 \\  \href{https://github.com/seshagiriprabhu/software-protection-lab}{Assignment repo}}
+    	\structure{\footnotesize{seshagiriprabhu@gmail.com} \\ TA: ACN \\  \href{https://github.com/seshagiriprabhu/advanced-computer-networks-lab}{Assignment repo}}
   	\end{flushright}
 }
+
+\subsection{bibliography}
+\begin{frame}[allowframebreaks]
+        \frametitle{References}
+\begin{thebibliography}{100} % 100 is a random guess of the total number of 
+%references
+\bibitem{Boney96} Mani Radhakrishnan and Jon Solworth, ``Socket programming in C/C++," \emph{University of Illinois}, Chicago.
+\bibitem{MG} Maarteen Van Steen, ``Sockets tutorials,`` \emph{Vijre University}, Amsterdam.
+\end{thebibliography}
+\end{frame}
 
 \end{document}
