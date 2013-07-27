@@ -48,7 +48,8 @@
 \def\SPSB#1#2{\rlap{\textsuperscript{\textcolor{red}{#1}}}\SB{#2}}
 \def\SP#1{\textsuperscript{\textcolor{red}{#1}}}
 \def\SB#1{\textsubscript{\textcolor{blue}{#1}}}
-
+\setbeamertemplate{itemize items}[default]
+\setbeamertemplate{enumerate items}[default]
 \usepackage{listings}
 \usepackage{color}
 
@@ -285,6 +286,24 @@ two way communication with maximum message size. (This is not available on most 
 		\item \textcolor{blue}{Iterating server:} Only one socket is opened at a time. When the processing on that connection is completed, the socket is closed, and next connection can be accepted.
 		\item \textcolor{blue}{Forking server}: After an accept, a child process is forked off to handle the connection. Variation: the child processes are preforked and are passed the socketId.
 		\item \textcolor{blue}{Concurrent single server}: use select to simultaneously wait on all open socketIds, and waking up the process only when new data arrives.
+	\end{itemize}
+	}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Pro and con of accept styles}
+	{\footnotesize
+
+	\begin{itemize}
+		\item \textcolor{blue}{Iterating server} is basically a low performance technique since
+only one connection is open at a time.
+		\item \textcolor{blue}{Forking servers} enable using multiple processors. But they
+make sharing state difficult, unless performed with threads.
+Threads, however present a very fragile programming
+environment.
+		\item \textcolor{blue}{Concurrent single server}: reduces context switches relative to
+forking processes and complexity relative to threads. But does
+not benefit from multiprocessors.
 	\end{itemize}
 	}
 \end{frame}
