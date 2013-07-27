@@ -1,8 +1,7 @@
 Advanced-computer-networks-lab
 ==============================
 
-This is repository related to CS620 Advanced Computer Networks offered for
-master's degree students at Amrita Vishwa Vidyapeetham, Amritapuri campus. 
+This repository contains files related to CS620 Advanced Computer Networks lab.
 
 ## How to get started ##
 
