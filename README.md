@@ -7,8 +7,8 @@ This repository contains files related to CS620 Advanced Computer Networks lab.
 
 ### Software requirements ###
 
-1. texlive-full
-> `sudo apt-get install texlive-full`
+1. texlive
+> `sudo apt-get install texlive-latex3 texlive-science`
 
 2. git-core
 > `sudo apt-get install git-core`
