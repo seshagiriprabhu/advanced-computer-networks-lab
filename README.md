@@ -15,7 +15,7 @@ This repository contains files related to CS620 Advanced Computer Networks lab.
 
 ### How to obtain files from this repo ###
 
-> `git clone git@github.com:seshagiriprabhu/advanced-computer-networks-lab.git`
+> `git clone https://github.com/seshagiriprabhu/advanced-computer-networks-lab.git`
 
 ### How to compile tex files ###
 
